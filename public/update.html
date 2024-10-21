@@ -10,171 +10,19 @@
         body {
             font-family: 'Raleway', sans-serif;
         }
-        .text-smaller {
-            font-size: 0.875rem;
-        }
-        .code-block {
-            font-size: 0.75rem;
-            line-height: 1.2;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-        #modal {
-            display: flex;
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            max-width: 600px;
-            width: 100%;
-        }
     </style>
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
-    <h1 class="text-xl font-semibold mb-4">Bambulab Firmware Updater</h1>
-    <div class="bg-white p-5 rounded shadow-md w-full max-w-md text-smaller">
-        <div class="mb-3">
-            <label for="printer-ip" class="block text-gray-700">Printer IP</label>
-            <input type="text" id="printer-ip" class="mt-1 block w-full p-2 border border-gray-300 rounded">
-        </div>
-        <div class="mb-3">
-            <label for="sn" class="block text-gray-700">SN <a href="https://wiki.bambulab.com/en/general/find-sn" class="text-green-500">(Help)</a></label>
-            <input type="text" id="sn" class="mt-1 block w-full p-2 border border-gray-300 rounded">
-        </div>
-        <div class="mb-3">
-            <label for="access-code" class="block text-gray-700">Access Code</label>
-            <input type="password" id="access-code" class="mt-1 block w-full p-2 border border-gray-300 rounded">
-        </div>
-        <div class="mb-3">
-            <label for="printer-model" class="block text-gray-700">Printer Model</label>
-            <input type="text" id="printer-model" class="mt-1 block w-full p-2 border border-gray-300 rounded" disabled>
-        </div>
-        <div class="flex space-x-2">
-            <button id="update-button" class="bg-green-500 text-white py-2 px-3 rounded w-1/2" style="background-color: #3AB54A;">
-                Update
-            </button>
-            <button id="terminate-button" class="bg-red-500 text-white py-2 px-3 rounded w-1/2">
-                Terminate Proxy
-            </button>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="text-center">
+        <h1 class="text-2xl font-semibold mb-4">Bambulab Firmware Updater</h1>
+        <a href="./runner.html" class="bg-green-500 text-white py-2 px-6 rounded text-xl" style="background-color: #3AB54A;">
+            Start
+        </a>
+        <div class="text-gray-600 mt-4">
+            <p>Bambulab Firmware Updating tool for domestic (CN) printers</p>
+            <p>Inspired by <a href="https://cafe.naver.com/bambulab/3353" class="text-blue-500">Halwin</a></p>
+            <p>Made by <a href="https://github.com/yeorinhieut" class="text-blue-500">yeorinhieut</a></p>
         </div>
     </div>
-    <div class="bg-white p-3 mt-5 rounded shadow-md w-full max-w-md text-smaller">
-        <h2 class="text-md font-semibold mb-2">Console</h2>
-        <div id="console" class="h-40 bg-gray-100 p-2 overflow-y-scroll border border-gray-300 rounded text-xs"></div>
-    </div>
-
-    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <div class="modal-content text-smaller">
-            <h2 class="text-xl font-semibold mb-4">Proxy Download and Installation Instructions</h2>
-            <div class="mb-6">
-                <h3 class="font-semibold mt-4">Windows:</h3>
-                <ol class="list-decimal list-inside mb-4 ml-4">
-                    <li>Download the proxy using the button below.</li>
-                    <li>Run the downloaded file.</li>
-                    <li>If a SmartScreen window appears, click on "More info" and then "Run anyway".</li>
-                </ol>
-                <h3 class="font-semibold mt-4">macOS:</h3>
-                <p class="mb-2">Choose the appropriate version (x86/arm) and follow these steps:</p>
-                <ol class="list-decimal list-inside mb-4 ml-4">
-                    <li>Download the proxy using the button below.</li>
-                    <li>Open Terminal</li>
-                    <li>Navigate to the download directory</li>
-                    <li>Run the following commands:</li>
-                </ol>
-                <pre class="bg-gray-100 p-2 rounded mb-2 code-block">
-xattr -d com.apple.quarantine bambu-updater-macos-x86
-chmod +x ./bambu-updater-macos-x86
-./bambu-updater-macos-x86</pre>
-                <p class="mb-4">Note: Replace "x86" with "arm" if you're using an ARM-based Mac.</p>
-            </div>
-            <button id="downloadBtn" class="bg-green-500 text-white py-2 px-4 rounded w-full">Download Proxy</button>
-        </div>
-    </div>
-
-    <script>
-        let pingInterval;
-
-        const checkProxy = () => {
-            fetch('http://127.0.0.1:1883/ping')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message === 'pong') {
-                        document.getElementById('modal').style.display = 'none';
-                        clearInterval(pingInterval);
-                    }
-                })
-                .catch(error => {
-                    console.log('Proxy not running:', error);
-                });
-        };
-
-        const getModel = (sn) => {
-            if (sn.startsWith('00M')) return 'X1C';
-            if (sn.startsWith('00W')) return 'X1';
-            if (sn.startsWith('01S')) return 'P1P';
-            if (sn.startsWith('01P')) return 'P1S';
-            if (sn.startsWith('030')) return 'A1_MINI';
-            if (sn.startsWith('039')) return 'A1';
-            return 'Unknown Model';
-        };
-
-        document.addEventListener('DOMContentLoaded', (event) => {
-            pingInterval = setInterval(checkProxy, 500);
-
-            document.getElementById('sn').addEventListener('input', (event) => {
-                const model = getModel(event.target.value);
-                document.getElementById('printer-model').value = model;
-            });
-
-            document.getElementById('downloadBtn').addEventListener('click', () => {
-                window.location.href = './bambu-proxy.zip';
-            });
-        });
-
-        document.getElementById('update-button').addEventListener('click', function() {
-            const printerIp = document.getElementById('printer-ip').value;
-            const sn = document.getElementById('sn').value;
-            const accessCode = document.getElementById('access-code').value;
-            const printerModel = document.getElementById('printer-model').value;
-
-            fetch('http://127.0.0.1:1883/update', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ printerIp, sn, accessCode, printerModel })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const consoleDiv = document.getElementById('console');
-                consoleDiv.innerHTML += `Response: ${JSON.stringify(data)}<br>`;
-            })
-            .catch(error => {
-                const consoleDiv = document.getElementById('console');
-                consoleDiv.innerHTML += `Error: ${error}<br>`;
-            });
-        });
-
-        document.getElementById('terminate-button').addEventListener('click', function() {
-            fetch('http://127.0.0.1:1883/terminate', {
-                method: 'POST'
-            })
-            .then(response => response.json())
-            .then(data => {
-                const consoleDiv = document.getElementById('console');
-                consoleDiv.innerHTML += `Response: ${JSON.stringify(data)}<br>`;
-            })
-            .catch(error => {
-                const consoleDiv = document.getElementById('console');
-                consoleDiv.innerHTML += `Error: ${error}<br>`;
-            });
-        });
-    </script>
 </body>
 </html>

@@ -3,25 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bambulab Firmware Updater</title>
+    <title>bambu.pages.dev</title>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Raleway', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .btn {
+            transition: all 0.3s ease;
+            background-color: #3AB54A;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="flex items-center justify-center min-h-screen">
     <div class="text-center">
-        <h1 class="text-2xl font-semibold mb-4">Bambulab Firmware Updater</h1>
-        <a href="./update.html" class="bg-green-500 text-white py-2 px-6 rounded text-xl" style="background-color: #3AB54A;">
-            Start
-        </a>
-        <div class="text-gray-600 mt-4">
-            <p>Bambulab Firmware Updating tool for domestic (CN) printers</p>
-            <p>Inspired by <a href="https://cafe.naver.com/bambulab/3353" class="text-blue-500">Halwin</a></p>
-            <p>Made by <a href="https://github.com/yeorinhieut" class="text-blue-500">yeorinhieut</a></p>
+        <h1 class="text-3xl font-semibold text-gray-800 mb-8">bambu.pages.dev</h1>
+        
+        <div class="flex justify-center space-x-6">
+            <a href="./bambucode.html" class="btn w-56 text-white py-4 px-4 rounded-lg text-lg shadow-md">
+                <div class="font-semibold">Bambucode</div>
+                <div class="text-xs mt-1">Better startcode for Bambulab Printers</div>
+            </a>
+            
+            <a href="./update.html" class="btn w-56 text-white py-4 px-4 rounded-lg text-lg shadow-md">
+                <div class="font-semibold">Firmware Updater</div>
+                <div class="text-xs mt-1">Firmware updater for CN region Bambulab Printers</div>
+            </a>
+        </div>
+        
+        <div class="text-gray-600 mt-8 text-xs">
+            <p>Made by <a href="https://github.com/yeorinhieut" class="text-green-600 hover:underline">yeorinhieut</a></p>
         </div>
     </div>
 </body>
