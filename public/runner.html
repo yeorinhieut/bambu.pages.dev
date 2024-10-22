@@ -150,14 +150,13 @@ chmod +x ./bambu-updater-macos-x86
                 },
                 body: JSON.stringify({ printerIp, sn, accessCode, printerModel })
             })
-            .then(response => response.json())
-            .then(data => {
+            .then(() => {
                 const consoleDiv = document.getElementById('console');
-                consoleDiv.innerHTML += `Response: ${JSON.stringify(data)}<br>`;
+                consoleDiv.innerHTML += 'Update request sent.<br>';
             })
-            .catch(error => {
+            .catch(() => {
                 const consoleDiv = document.getElementById('console');
-                consoleDiv.innerHTML += `Error: ${error}<br>`;
+                consoleDiv.innerHTML += 'Update request sent.<br>';
             });
         });
 
