@@ -115,12 +115,12 @@ chmod +x ./bambu-updater-macos-x86
         };
 
         const getModel = (sn) => {
-            if (sn.startsWith('00M')) return 'X1C';
-            if (sn.startsWith('00W')) return 'X1';
-            if (sn.startsWith('01S')) return 'P1P';
-            if (sn.startsWith('01P')) return 'P1S';
-            if (sn.startsWith('030')) return 'A1_MINI';
-            if (sn.startsWith('039')) return 'A1';
+            if (sn.startsWith('00M')) return 'x1';
+            if (sn.startsWith('00W')) return 'x1';
+            if (sn.startsWith('01S')) return 'p1';
+            if (sn.startsWith('01P')) return 'p1';
+            if (sn.startsWith('030')) return 'a1_mini';
+            if (sn.startsWith('039')) return 'a1';
             return 'Unknown Model';
         };
 
