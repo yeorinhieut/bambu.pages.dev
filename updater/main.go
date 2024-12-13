@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -105,7 +106,23 @@ func messagePubHandler(client mqtt.Client, msg mqtt.Message) {
 }
 
 func getPayload(modelName string) (string, error) {
-	url := fmt.Sprintf("https://raw.githubusercontent.com/lunDreame/user-bambulab-firmware/main/assets/%s_series_ams.json", modelName)
+	// Map printer models to their correct JSON file names
+	modelToFile := map[string]string{
+		"A1":      "a1_ams.json",
+		"A1_MINI": "a1_mini_ams.json",
+		"P1":      "p1_series_ams.json",
+		"X1":      "x1_series_ams.json",
+		"X1E":     "x1e_ams.json",
+	}
+
+	// Get the correct file name based on the model
+	fileName, exists := modelToFile[strings.ToUpper(modelName)]
+	if !exists {
+		return "", fmt.Errorf("unsupported printer model: %s", modelName)
+	}
+
+	url := fmt.Sprintf("https://raw.githubusercontent.com/lunDreame/user-bambulab-firmware/main/assets/%s", fileName)
+
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
